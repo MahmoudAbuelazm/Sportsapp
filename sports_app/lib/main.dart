@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sports_app/Screen/home_screen.dart';
+import 'package:sports_app/Screen/tabBar_screen.dart';
 
 import 'Screen/country_screen.dart';
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: CountryScreen(),
+      home: tabBarScreen(),
     );
   }
 }
