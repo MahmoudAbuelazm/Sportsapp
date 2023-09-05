@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sports_app/Screen/home_screen.dart';
-<<<<<<< HEAD
 import 'package:sports_app/Screen/login_screen.dart';
-=======
-import 'package:sports_app/Screen/tabBar_screen.dart';
-
-// ignore: unused_import
-import 'Screen/country_screen.dart';
->>>>>>> 378862c377b2580865604bdea48f8b8b6fccaf61
+import 'package:sports_app/Screen/onboarding_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,11 +28,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       ),
-<<<<<<< HEAD
-      home:LoginScreen() ,
-=======
-      home: tabBarScreen(),
->>>>>>> 378862c377b2580865604bdea48f8b8b6fccaf61
+      home:OnBoardingScreen() ,
     );
   }
 }
