@@ -34,8 +34,8 @@ class Result {
   Result.fromJson(Map<String, dynamic> json){
     countryKey = json['country_key'];
     countryName = json['country_name'];
-    countryIso2 = null;
-    countryLogo = null;
+    countryIso2 = json['country_iso2'];
+    countryLogo = json['country_logo'];
   }
 
   Map<String, dynamic> toJson() {
