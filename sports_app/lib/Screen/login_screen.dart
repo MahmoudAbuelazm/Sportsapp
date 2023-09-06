@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sports_app/Screen/home_screen.dart';
 import 'dart:math';
+import 'package:sports_app/Global/global_data.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   void generateOTP() {
-    // Generate a random 4-digit OTP
+  
     final random = Random();
     generatedOtp = (1000 + random.nextInt(9000)).toString();
     // Show OTP in an AlertDialog
@@ -46,15 +47,17 @@ class _LoginScreenState extends State<LoginScreen> {
   void verifyOTP() {
     if (_formKey.currentState!.validate()) {
       if (otp == generatedOtp) {
-        // Navigate to the home screen with login data
+       
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => HomeScreen(phoneNumber: phoneNumber),
+            builder: (context) => HomeScreen(
+              phoneNumber: phoneNumber,
+            ),
           ),
         );
       } else {
-        // Show an error message
+       
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -134,6 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               Expanded(
                                 child: TextFormField(
+                                  controller: phoneNumberController,
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sports_app/Global/global_data.dart';
 import 'package:sports_app/Screen/country_screen.dart';
 import 'package:sports_app/main.dart';
 import 'package:lottie/lottie.dart';
 
 import '../Data/Cubit/cubit/git_country_cubit.dart';
+
 // ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key, required String phoneNumber}) : super(key: key);
@@ -16,24 +18,24 @@ class HomeScreen extends StatelessWidget {
     'Images/photo_2023-09-02_12-47-30.jpg',
     'Images/photo_2023-09-02_12-47-46.jpg',
   ];
-  void _showCustomDialog(BuildContext context, String sportName, String getSportName) {
+
+  String User = "";
+
+  void _showCustomDialog(
+      BuildContext context, String sportName, String getSportName) {
     showDialog(
-   
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor:  Color.fromARGB(255, 25, 24, 26).withOpacity(0.7), 
-          
-
+          backgroundColor: Color.fromARGB(255, 25, 24, 26).withOpacity(0.7),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-             Lottie.asset('assets/animation_lm3gj47p.json',
-          
+              Lottie.asset(
+                'assets/animation_lm3gj47p.json',
                 width: 100,
                 height: 100,
               ),
-            
               const SizedBox(height: 15),
               Text(
                 'Coming soon ',
@@ -46,33 +48,59 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
-         
         );
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
+    if (phoneNumberController != null) {
+      User = phoneNumberController.text;
+    }
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        //backgroundColor: Colors.transparent,
-
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconButton(
-            icon: const Icon(Icons.menu),
-            color: Colors.white,
-            iconSize: 30,
-            padding: const EdgeInsets.all(8),
-            alignment: Alignment.center,
-            splashColor: Colors.blueGrey,
-            onPressed: () {},
-          ),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              color: Colors.white,
+              iconSize: 30,
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+      drawer: Drawer(
+          child: Container(
+        color: Colors.white,
+        child: ListView(
+          children: [
+            DrawerHeader(
+                child: Center(
+                    child: Text(
+              "Welcome",
+              style: TextStyle(fontSize: 30, color: Colors.black),
+            ))),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text(User),
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("Logout"),
+              onTap: () {
+                // Implement your logout logic here
+              },
+            ),
+          ],
+        ),
+      )),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -87,10 +115,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 65),
-              child: Text(
-                  //textAlign: TextAlign.center,
-
-                  "Choose Your fav \n         sport.. ",
+              child: Text("Choose Your fav \n         sport.. ",
                   style: TextStyle(
                     fontSize: 28,
                     fontFamily: GoogleFonts.aclonica().fontFamily,
@@ -112,12 +137,13 @@ class HomeScreen extends StatelessWidget {
                     return GestureDetector(
                       onTap: () {
                         if (index == 0) {
-                          
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CountryScreen(response:context.read<GitCountryCubit>().gitCountry(),
-                                
+                              builder: (context) => CountryScreen(
+                                response: context
+                                    .read<GitCountryCubit>()
+                                    .gitCountry(),
                               ),
                             ),
                           );
@@ -128,7 +154,7 @@ class HomeScreen extends StatelessWidget {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                        //  border: Border.all(color: Colors.white, width: 0.1),
+                          //  border: Border.all(color: Colors.white, width: 0.1),
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
                             image: AssetImage(imageList[index]),
@@ -145,7 +171,7 @@ class HomeScreen extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 26,
                               color: Colors.white,
-                             // fontFamily: GoogleFonts.aclonica().fontFamily,
+                              // fontFamily: GoogleFonts.aclonica().fontFamily,
                             ),
                           ),
                         ),
