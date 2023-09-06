@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sports_app/Data/Cubit/Leagues%20Cubit/leagues_cubit.dart';
+import 'package:sports_app/Screen/leagues.dart';
 // import 'package:http/http.dart';
 
 import '../Data/Cubit/cubit/git_country_cubit.dart';
@@ -81,14 +83,14 @@ class _CountryScreenState extends State<CountryScreen> {
                                         crossAxisCount: 3),
                                 itemBuilder: (context, i) {
                                   return GestureDetector(
-                          //           onTap: (){
-                          //             Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => ()
-                          //   ),
-                          // );
-                          //           },
+                                    onTap: (){
+                                      Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>LeaguesScreen (response2:context.read<LeaguesCubit>().getAllLeagues("5")),
+                            ),
+                          );
+                                    },
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: Container(
