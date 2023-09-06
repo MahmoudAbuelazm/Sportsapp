@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sports_app/Data/Cubit/GetTeamsCubit/cubit/get_teams_cubit.dart';
+import 'package:sports_app/Data/Cubit/GetTopScorerCubit/cubit/get_top_scorer_cubit.dart';
+
+
 
 class tabBarScreen extends StatelessWidget {
   tabBarScreen({super.key});
@@ -10,12 +15,20 @@ class tabBarScreen extends StatelessWidget {
     return DefaultTabController(
         length: 2,
         child: Scaffold(
-        //  backgroundColor: Colors.transparent,
+          //  backgroundColor: Colors.transparent,
           appBar: AppBar(
-         backgroundColor: Colors.black,
+            backgroundColor: Colors.black,
             title: Center(child: Text("League name ")),
-            bottom: TabBar(indicatorColor: Colors.white,
-             tabs: [
+            leading: IconButton(
+              icon: const Icon(Icons.menu),
+              color: Colors.white,
+              iconSize: 30,
+              padding: const EdgeInsets.all(8),
+              alignment: Alignment.center,
+              splashColor: Colors.blueGrey,
+              onPressed: () {},
+            ),
+            bottom: TabBar(indicatorColor: Colors.white, tabs: [
               Tab(
                 child: Text("Teams"),
               ),
@@ -25,104 +38,144 @@ class tabBarScreen extends StatelessWidget {
             ]),
           ),
           body: Container(
-            
             width: width,
             height: height,
             decoration: BoxDecoration(
-             
                 image: DecorationImage(
                     fit: BoxFit.fill,
                     image: AssetImage('Images/Background.png'))),
-            child: TabBarView(children: [
-              GridView(
-                children: [
-                  for (int i = 0; i < 18; i++)
-                    Container(
-                      width: width / 4,
-                      height: width / 4,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage("Images/pngwing.com.png"))),
-                    ),
-                ],
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                ),
-              ),
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    children: [
-                      SizedBox(height: 10),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          prefixIconColor: Colors.white,
-                          hintText: "search",
-                          hintStyle: TextStyle(color: Colors.white),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          // border:
-                        ),
-                      ),
-                      SizedBox(
-                        height: height / 30,
-                      ),
-                      Column(
-                        children: [
-                          for (int i = 0; i < 100; i++)
-                            Column(
-                              children: [
-                                Container(
-                                  height: height / 20,
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(100),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "player name",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      Text(
-                                        "player team",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      Text(
-                                        "goal num",
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: height / 30,
-                                )
-                              ],
+            child: TabBarView(
+              children: [
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              context.read<GetTeamsCubit>().GetTeams();
+                            },
+                            child: Text("press")),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.search),
+                            prefixIconColor: Colors.white,
+                            hintText: "search",
+                            hintStyle: TextStyle(color: Colors.white),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.blue, width: 2),
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                        ],
-                      ),
-                    ],
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: height / 100,
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              context.read<GetTopScorerCubit>().getTopScorer();
+                            },
+                            child: Text("press")),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height,
+                          width: MediaQuery.of(context).size.width,
+                          child: BlocBuilder<GetTeamsCubit, GetTeamsState>(
+                            builder: (context, state) {
+                              if (state is GetTeamsSuccess) {
+                                return GridView.builder(
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 3,
+                                  ),
+                                  itemCount: state.response.result.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        child: Image.network(
+                                          state.response.result[index].teamLogo,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                return Center(child: Text("error"));
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: height / 5,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ]),
+                BlocBuilder<GetTopScorerCubit, GetTopScorerState>(
+                  builder: (context, state) {
+                    if (state is GetTopScorerSuccess) {
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: ListView.builder(
+                            itemCount: state.response.result.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height *
+                                      1 /
+                                      15,
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: const BoxDecoration(
+                                      gradient: LinearGradient(
+                                          begin: Alignment.center,
+                                          end: Alignment.bottomRight,
+                                          colors: [
+                                        Colors.black,
+                                        Color(0xFF1F0048),
+                                      ])),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          state.response.result[index]
+                                              .playerName,
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Text(
+                                          state.response.result[index].teamName,
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        Text(
+                                          (state.response.result[index].goals)
+                                              .toString(),
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      );
+                    } else {
+                      return Center(child: Text("error"));
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ));
   }
