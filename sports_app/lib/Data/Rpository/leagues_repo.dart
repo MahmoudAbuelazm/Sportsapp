@@ -1,16 +1,15 @@
 import 'dart:convert';
 
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sports_app/Data/Models/data/leagues.dart';
-
+import 'package:sports_app/Data/constants/constants.dart';
 
 class LeaguesRepo {
-  Future<Leagues?> getAllLeagues(String countryId) async {
+  Future<Leagues?> getAllLeagues( countryId) async {
     try {
       http.Response response = await http.get(Uri.parse(
-          "https://apiv2.allsportsapi.com/football/?met=Leagues&APIkey=56c74531e88d4ce2df8cd2a150a449c5425f14eda66bc15b7b8e1c96e8c386e6&countryId=$countryId"));
+          "https://apiv2.allsportsapi.com/football/?met=Leagues&APIkey=$apiKey&countryId=${countryId}"));
 
       Map<String, dynamic> data = json.decode(response.body);
 

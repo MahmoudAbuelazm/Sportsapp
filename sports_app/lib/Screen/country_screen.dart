@@ -101,16 +101,25 @@ class _CountryScreenState extends State<CountryScreen> {
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3),
-                                itemBuilder: (context, i) {
+                                itemBuilder: (context, i)
+                                 {
+                                  var countryId = state.response.result[i].countryKey.toString();
+                                  var countryName = state.response.result[i].countryName.toString();
+                                  var countryLogo = state.response.result[i].countryLogo.toString();
+                                  // var countryName = state.response.result[i].countryName.toString();
+
                                   return GestureDetector(
-                          //           onTap: (){
-                          //             Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => ()
-                          //   ),
-                          // );
-                          //           },
+                                    onTap: (){
+                                       Navigator.push<void>(
+                                            context,
+                                            MaterialPageRoute<void>(
+                                              builder: (BuildContext context) =>   LeaguesScreen(countryId: countryId , countryName: countryName,countryLogo: countryLogo,),
+                                            ),
+                                          );
+                          final leages = context.read<LeaguesCubit>().getAllLeagues(state.response.result[i].countryKey.toString());
+                          context.read<LeaguesCubit>().getAllLeagues(state.response.result[i].countryKey.toString());
+                          
+                                    },
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
                                       child: Container(

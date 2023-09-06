@@ -9,6 +9,8 @@ const kComponentsBackgroundColor = Color(0xff21282d);
 const kBlue = Color(0xff15b5e3);
 
 const baseUrl = "https://apiv2.allsportsapi.com";
+const apiKey =
+    "56c74531e88d4ce2df8cd2a150a449c5425f14eda66bc15b7b8e1c96e8c386e6";
 
 List<OnboardModel> screens = <OnboardModel>[
   OnboardModel(

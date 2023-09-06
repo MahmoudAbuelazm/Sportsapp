@@ -3,10 +3,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sports_app/Data/Cubit/Leagues%20Cubit/leagues_cubit.dart';
 import 'package:sports_app/Data/Cubit/cubit/git_country_cubit.dart';
 
-class LeaguesScreen extends StatelessWidget {
-  // ignore: prefer_typing_uninitialized_variables
-  var response2;
-  LeaguesScreen({super.key, required this.response2});
+class LeaguesScreen extends StatefulWidget {
+  final String countryId;
+  final String countryName;
+  final String countryLogo;
+  const LeaguesScreen(
+      {super.key,
+      required this.countryId,
+      required this.countryName,
+      required this.countryLogo});
+
+  @override
+  State<LeaguesScreen> createState() => _LeaguesScreenState();
+}
+
+class _LeaguesScreenState extends State<LeaguesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<LeaguesCubit>().getAllLeagues(widget.countryId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +36,14 @@ class LeaguesScreen extends StatelessWidget {
           child: Row(
             children: [
               Image.network(
-                "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjpljOWcxImIeXCBZ4r8l1wVUgt79Z8WA4sXbUIJ0VeKByQlHb2VT1imAM2rPjo9XH5rsPES4jCqf_WQwMKO1p-Y7qziqFvDvjmcW4Qy0j81UJPqMtB1xf8hAiKEuvnFdlpKX_ZLpSaYiRLWVbCspcZ1NdjIzEArGLRKdJKSM6GIR1g5Bjj5hpvrOd4/s1600/all%20new%20italy%20logo%20%285%29.jpg", // Replace with the path to your Italy image
+                (widget
+                    .countryLogo), // Replace with the path to your Italy image
                 height: 30, // Adjust the height as needed
                 width: 30, // Adjust the height as needed
               ),
-              const Text(
-                "Italy",
+              SizedBox(width: 10),
+              Text(
+                (widget.countryName).toString(),
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -79,46 +97,46 @@ class LeaguesScreen extends StatelessWidget {
                         child: ListView.builder(
                           itemCount: state.response.result.length,
                           itemBuilder: (context, index) {
-                            return Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height *
-                                      1 /
-                                      17,
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.transparent,
+                            return Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 1 / 13,
+                                width: MediaQuery.of(context).size.width,
+                                decoration: const BoxDecoration(
+                                  color: Colors.transparent,
 
-                                    // borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Image(
-                                          image: NetworkImage(state.response
-                                                  .result[index].leagueLogo ??
-                                              'https://cdn.alweb.com/thumbs/egyptencyclopedia/article/fit710x532/%D8%B9%D9%84%D9%85-%D9%85%D8%B5%D8%B1-%D8%A3%D9%87%D9%85-%D8%A7%D9%84%D8%AD%D9%82%D8%A7%D8%A6%D9%82.jpg'),
+                                  // borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Image(
+                                        height: 30,
+                                        width: 30,
+                                        image: NetworkImage(state.response
+                                                .result[index].leagueLogo ??
+                                              
+                                            'https://as2.ftcdn.net/v2/jpg/04/70/29/87/1000_F_470298738_1eHqTZ0B5AvB3emaESPpvQ93227y7P0l.jpg'
+                                            ),
+                                      ),
+                                      SizedBox(
+                                        height: 1,
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        (leaguesList[index].leagueName)
+                                            .toString(),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
                                         ),
-                                        SizedBox(
-                                          height: 1,
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          (leaguesList[index].leagueName)
-                                              .toString(),
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),

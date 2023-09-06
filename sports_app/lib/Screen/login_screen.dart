@@ -1,161 +1,280 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:sports_app/Screen/home_screen.dart';
+import 'dart:math';
+import 'package:sports_app/Global/global_data.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  String phoneNumber = "";
+  String otp = "";
+  String generatedOtp = "";
+  String errorMessage = "";
+  final RegExp numericRegExp = RegExp(r'^[0-9]+$');
+
+
+  void generateOTP() {
+  
+    final random = Random();
+    generatedOtp = (1000 + random.nextInt(9000)).toString();
+    // Show OTP in an AlertDialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Generated OTP"),
+          content: Text(generatedOtp),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void verifyOTP() {
+    if (_formKey.currentState!.validate()) {
+      if (otp == generatedOtp) {
+       
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(
+              phoneNumber: phoneNumber,
+            ),
+          ),
+        );
+      } else {
+       
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text("Incorrect OTP. Please try again."),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("Images/photo_2023-09-02_01-31-07.jpg"),
-            fit: BoxFit.fill,
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("Images/photo_2023-09-02_01-31-07.jpg"),
+              fit: BoxFit.fill,
+            ),
           ),
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              flex: 3,
-              child: Container(
-                child: Lottie.asset(
-                  "assets/animation_lm41di2i.json",
+          child: Column(
+            children: [
+              Expanded(
+                flex: 3,
+                child: Container(
+                  child: Lottie.asset(
+                    "assets/animation_lm41di2i.json",
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "SIGN IN",
-                        style: TextStyle(
-                          fontSize: 34,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        "SIGN UP",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.white.withOpacity(0.5),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 30),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+              Expanded(
+                flex: 4,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(right: 16),
-                          child: Icon(
-                            Icons.alternate_email,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: "Email Address",
-                              hintStyle: TextStyle(
-                                color: Colors.grey,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "LOGIN",
+                              style: TextStyle(
+                                fontSize: 34,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(bottom: 30),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
+                        Spacer(),
                         Padding(
-                          padding: EdgeInsets.only(right: 16),
-                          child: Icon(
-                            Icons.lock,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: "Password",
-                              hintStyle: TextStyle(
-                                color: Colors.grey,
+                          padding: const EdgeInsets.only(bottom: 30),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 16),
+                                child: Icon(
+                                  Icons.phone,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                            obscureText: true,
+                              Expanded(
+                                child: TextFormField(
+                                  controller: phoneNumberController,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                  onChanged: (value) {
+                                    phoneNumber = value;
+                                  },
+                                  validator: (value) {
+                                        if (!numericRegExp.hasMatch(value!)) {
+                                          return "Phone number should contain only numbers";
+                                          }
+                                    else if (value == null || value.isEmpty) {
+                                      return "Phone number is required";
+                                    }else if (value.length != 11)
+                                      return "Phone number is not valid";
+                                     
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: "Number",
+                                    hintStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 30),
-                    child: Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.5),
-                            ),
-                          ),
-                          child: Image.asset(
-                            'Images/google-icon-1024x1024-hv1t7wtt.png',
-                            width: 23,
-                            height: 23,
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 30),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 16),
+                                child: Icon(
+                                  Icons.lock,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                  onChanged: (value) {
+                                    otp = value;
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: "OTP",
+                                    hintStyle: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  obscureText: true,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "OTP is required";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Spacer(),
-                       
-                        Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.5),
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 30),
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.5),
+                                    ),
+                                  ),
+                                  child: Image.asset(
+                                    'Images/google-icon-1024x1024-hv1t7wtt.png',
+                                    width: 23,
+                                    height: 23,
+                                  ),
+                                ),
+                              ),
+                              Spacer(),
+                              GestureDetector(
+                                onTap: generateOTP,
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.5),
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.refresh,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 16),
+                              GestureDetector(
+                                onTap: verifyOTP,
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.5),
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          
-                            child: const Icon(
-
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                          ),
-                          
                         ),
-                        
                       ],
                     ),
-                  )
-                ]),
+                  ),
+                ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
