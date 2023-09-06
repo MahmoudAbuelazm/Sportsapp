@@ -1,5 +1,6 @@
 //import 'dart:collection';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sports_app/Data/Cubit/playersCubit/get_players_data_cubit.dart';
@@ -25,21 +26,21 @@ class Players extends StatelessWidget {
               onPressed: () {
                 context.read<GetPlayersDataCubit>().gitPlayers();
               },
-              child: Text("Press")),
+              child: const Text("Press")),
         ),
         BlocBuilder<GetPlayersDataCubit, GetPlayersDataState>(
           builder: (context, state) {
             if (state is GetPlayersDataInitial) {
-              return Text("Press");
+              return const Text("Press");
             } else if (state is GetPlayersLoading) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             } else if (state is GetPlayersSuccess) {
               return Container(
                 height: double.infinity,
                 width: double.infinity,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage("Images/Background.png"),
                         fit: BoxFit.cover)),
@@ -51,11 +52,11 @@ class Players extends StatelessWidget {
                           decoration: BoxDecoration(
                               //     color: Color(0xff000000),
                               borderRadius: BorderRadius.circular(20)),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 15),
+                                padding: EdgeInsets.only(bottom: 15),
                                 child: Image(
                                     width: 38,
                                     height: 38,
@@ -63,7 +64,7 @@ class Players extends StatelessWidget {
                                         "Images/ep_arrow-left-bold.png")),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(right: 130),
+                                padding: EdgeInsets.only(right: 130),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -71,7 +72,7 @@ class Players extends StatelessWidget {
                                       height: 30,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(top: 25),
+                                      padding: EdgeInsets.only(top: 25),
                                       child: Image(
                                           width: 64,
                                           height: 80,
@@ -93,8 +94,8 @@ class Players extends StatelessWidget {
                            
                             ],
                           )),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 50),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 50),
                         child: Text(
                           "SQUAD",
                           style: TextStyle(
@@ -105,8 +106,8 @@ class Players extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 20),
                         child: Divider(
                           color: Colors.white,
                           indent: 110,
@@ -117,13 +118,13 @@ class Players extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 20),
                         child: TextField(
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Icons.search,
                               color: Colors.white,
                             ),
-                            label: Text(
+                            label: const Text(
                               "Search",
                               style: TextStyle(
                                 color: Colors.white,
@@ -132,19 +133,19 @@ class Players extends StatelessWidget {
                               ),
                             ),
                             hintText: "Enter Player Name",
-                            hintStyle: TextStyle(
+                            hintStyle: const TextStyle(
                               color: Colors.white,
                               fontFamily: "Allerta",
                               fontSize: 15,
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                   color: Color.fromARGB(255, 35, 33, 44),
                                   width: 2),
                               borderRadius: BorderRadius.circular(30),
                             ),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
+                              borderSide: const BorderSide(
                                   color: Color.fromARGB(255, 159, 158, 159)),
                               borderRadius: BorderRadius.circular(30),
                             ),
@@ -175,7 +176,7 @@ class Players extends StatelessWidget {
                                           context: context,
                                           builder: (context) {
                                             return Container(
-                                              decoration: BoxDecoration(
+                                              decoration: const BoxDecoration(
                                                   image: DecorationImage(
                                                       image: AssetImage(
                                                           "Images/Background.png"),
@@ -191,24 +192,25 @@ class Players extends StatelessWidget {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               40.0),
-                                                      child: Image(
-                                                          width: 83,
-                                                          height: 83,
-                                                          image: NetworkImage(
-                                                            state
-                                                                    .response
-                                                                    .result[
-                                                                        index]
-                                                                    .playerImage ??
-                                                                "https://thumbs.dreamstime.com/b/mo-salah-professional-footballer-vector-image-bandung-indonesia-march-mo-salah-professional-footballer-vector-image-242630646.jpg",
-                                                          )),
+                                                      child:CachedNetworkImage(
+                                                width: 47,
+                                                height: 47,
+                                                imageUrl:  state.response.result[index]
+                                                            .playerImage! ,
+                                                            errorWidget: (context, url, error) => //شالت الصوره الي فيها error
+                                                        Image.network("https://thumbs.dreamstime.com/b/mo-salah-professional-footballer-vector-image-bandung-indonesia-march-mo-salah-professional-footballer-vector-image-242630646.jpg")
+                                                  ,
+                                                  placeholder: (context, url) =>  Image.network("https://thumbs.dreamstime.com/b/mo-salah-professional-footballer-vector-image-bandung-indonesia-march-mo-salah-professional-footballer-vector-image-242630646.jpg"),
+                                                   )
                                                     ),
                                                   ),
                                                   Text(
                                                     state.response.result[index]
-                                                            .playerName ??
-                                                        "Mo.Salah",
-                                                    style: TextStyle(
+                                                            .playerName ==null||state.response.result[index]
+                                                            .playerName==""?"Mosalah":  state.response.result[index]
+                                                            .playerName,
+                                                        
+                                                    style: const TextStyle(
                                                         color:
                                                             Color(0xffFFFFFF),
                                                         fontFamily: "Allerta",
@@ -225,9 +227,9 @@ class Players extends StatelessWidget {
                                                             top: 50),
                                                     child: AlertDialog(
                                                       backgroundColor:
-                                                          Color(0xff333333),
+                                                          const Color(0xff333333),
                                                       shape:
-                                                          RoundedRectangleBorder(
+                                                          const RoundedRectangleBorder(
                                                         borderRadius:
                                                             BorderRadius.all(
                                                                 Radius.circular(
@@ -237,7 +239,7 @@ class Players extends StatelessWidget {
                                                         children: [
                                                           Row(
                                                             children: [
-                                                              Text(
+                                                              const Text(
                                                                 "Player Details",
                                                                 style: TextStyle(
                                                                     fontFamily:
@@ -263,7 +265,7 @@ class Players extends StatelessWidget {
                                                                     Navigator.pop(
                                                                         context);
                                                                   },
-                                                                  child: Icon(
+                                                                  child: const Icon(
                                                                     Icons.clear,
                                                                     color: Colors
                                                                         .white,
@@ -272,9 +274,9 @@ class Players extends StatelessWidget {
                                                               )
                                                             ],
                                                           ),
-                                                          Padding(
+                                                          const Padding(
                                                             padding:
-                                                                const EdgeInsets
+                                                                EdgeInsets
                                                                     .only(
                                                                     bottom: 60),
                                                             child: Divider(
@@ -298,7 +300,7 @@ class Players extends StatelessWidget {
                                                                             65),
                                                                 child: Row(
                                                                   children: [
-                                                                    Text(
+                                                                    const Text(
                                                                       "From ",
                                                                       style: TextStyle(
                                                                           fontFamily:
@@ -314,7 +316,7 @@ class Players extends StatelessWidget {
                                                                       state.response.result[index]
                                                                               .playerCountry ??
                                                                           "Egypt",
-                                                                      style: TextStyle(
+                                                                      style: const TextStyle(
                                                                           fontFamily:
                                                                               "Allerta",
                                                                           fontWeight: FontWeight
@@ -352,7 +354,7 @@ class Players extends StatelessWidget {
                                                                       Text(
                                                                         state.response.result[index].playerAge ??
                                                                             "31",
-                                                                        style: TextStyle(
+                                                                        style: const TextStyle(
                                                                             fontFamily:
                                                                                 "Tahoma",
                                                                             fontWeight: FontWeight
@@ -362,7 +364,7 @@ class Players extends StatelessWidget {
                                                                             color:
                                                                                 Colors.white),
                                                                       ),
-                                                                      Text(
+                                                                      const Text(
                                                                         "Years",
                                                                         style: TextStyle(
                                                                             fontFamily:
@@ -382,7 +384,7 @@ class Players extends StatelessWidget {
                                                                     Text(
                                                                       state.response.result[index].playerGoals ??
                                                                           "32",
-                                                                      style: TextStyle(
+                                                                      style: const TextStyle(
                                                                           fontFamily:
                                                                               "Tahoma",
                                                                           fontWeight: FontWeight
@@ -392,7 +394,7 @@ class Players extends StatelessWidget {
                                                                           color:
                                                                               Colors.white),
                                                                     ),
-                                                                    Text(
+                                                                    const Text(
                                                                       "Goals",
                                                                       style: TextStyle(
                                                                           fontFamily:
@@ -412,7 +414,7 @@ class Players extends StatelessWidget {
                                                                       state.response.result[index]
                                                                               .playerNumber ??
                                                                           "2",
-                                                                      style: TextStyle(
+                                                                      style: const TextStyle(
                                                                           fontFamily:
                                                                               "Tahoma",
                                                                           fontWeight: FontWeight
@@ -422,7 +424,7 @@ class Players extends StatelessWidget {
                                                                           color:
                                                                               Colors.white),
                                                                     ),
-                                                                    Text(
+                                                                    const Text(
                                                                       " Number",
                                                                       style: TextStyle(
                                                                           fontFamily:
@@ -457,7 +459,7 @@ class Players extends StatelessWidget {
                                                                       state.response.result[index]
                                                                               .playerYellowCards ??
                                                                           "1",
-                                                                      style: TextStyle(
+                                                                      style: const TextStyle(
                                                                           fontFamily:
                                                                               "Tahoma",
                                                                           fontWeight: FontWeight
@@ -467,7 +469,7 @@ class Players extends StatelessWidget {
                                                                           color:
                                                                               Colors.white),
                                                                     ),
-                                                                    Text(
+                                                                    const Text(
                                                                       "Yellow Card",
                                                                       style: TextStyle(
                                                                           fontFamily:
@@ -488,7 +490,7 @@ class Players extends StatelessWidget {
                                                                       state.response.result[index]
                                                                               .playerRedCards ??
                                                                           "1",
-                                                                      style: TextStyle(
+                                                                      style: const TextStyle(
                                                                           fontFamily:
                                                                               "Tahoma",
                                                                           fontWeight: FontWeight
@@ -498,7 +500,7 @@ class Players extends StatelessWidget {
                                                                           color:
                                                                               Colors.white),
                                                                     ),
-                                                                    Text(
+                                                                    const Text(
                                                                       "Red Cards",
                                                                       style: TextStyle(
                                                                           fontFamily:
@@ -516,9 +518,10 @@ class Players extends StatelessWidget {
                                                                   children: [
                                                                     Text(
                                                                       state.response.result[index]
-                                                                              .playerAssists ??
-                                                                          "Egyptian",
-                                                                      style: TextStyle(
+                                                            .playerAssists ==null||state.response.result[index]
+                                                            .playerAssists==""?"Mosalah":  state.response.result[index]
+                                                            .playerAssists!,
+                                                                      style: const TextStyle(
                                                                           fontFamily:
                                                                               "Tahoma",
                                                                           fontWeight: FontWeight
@@ -528,7 +531,7 @@ class Players extends StatelessWidget {
                                                                           color:
                                                                               Colors.white),
                                                                     ),
-                                                                    Text(
+                                                                    const Text(
                                                                       "Assits",
                                                                       style: TextStyle(
                                                                           fontFamily:
@@ -561,7 +564,7 @@ class Players extends StatelessWidget {
                                       height: 67,
                                       width: 375,
                                       decoration: BoxDecoration(
-                                          gradient: LinearGradient(colors: [
+                                          gradient: const LinearGradient(colors: [
                                             Color(0x2BC8C8C8),
                                             Color(0xFF2F0141),
                                           ]),
@@ -575,14 +578,16 @@ class Players extends StatelessWidget {
                                             ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(20.0),
-                                              child: Image(
-                                                  width: 47,
-                                                  height: 47,
-                                                  image: NetworkImage(
-                                                    state.response.result[index]
-                                                            .playerImage ??
-                                                        "https://thumbs.dreamstime.com/b/mo-salah-professional-footballer-vector-image-bandung-indonesia-march-mo-salah-professional-footballer-vector-image-242630646.jpg",
-                                                  )),
+                                              child: CachedNetworkImage(
+                                                width: 47,
+                                                height: 47,
+                                                imageUrl:  state.response.result[index]
+                                                            .playerImage! ,
+                                                            errorWidget: (context, url, error) => 
+                                                        Image.network("https://thumbs.dreamstime.com/b/mo-salah-professional-footballer-vector-image-bandung-indonesia-march-mo-salah-professional-footballer-vector-image-242630646.jpg")
+                                                  ,
+                                                  placeholder: (context, url) =>  Image.network("https://thumbs.dreamstime.com/b/mo-salah-professional-footballer-vector-image-bandung-indonesia-march-mo-salah-professional-footballer-vector-image-242630646.jpg"),
+                                                   )
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
@@ -595,7 +600,7 @@ class Players extends StatelessWidget {
                                                     state.response.result[index]
                                                             .playerName ??
                                                         "Mosalah",
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         color:
                                                             Color(0xffFFFFFF),
                                                         fontFamily: "Allerta",
@@ -605,7 +610,7 @@ class Players extends StatelessWidget {
                                                     state.response.result[index]
                                                             .playerType ??
                                                         "Coach",
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                         color:
                                                             Color(0xff999999),
                                                         fontFamily: "Allerta",
@@ -630,7 +635,7 @@ class Players extends StatelessWidget {
                 ),
               );
             } else {
-              return Text("Error");
+              return const Text("Error");
             }
           },
         ),

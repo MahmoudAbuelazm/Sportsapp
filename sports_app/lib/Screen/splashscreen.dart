@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("images/Background.png"), fit: BoxFit.cover)),
+              image: AssetImage("Images/Background.png"), fit: BoxFit.cover)),
       child: Stack(
         children: [
       
