@@ -1,6 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sports_app/Screen/home_screen.dart';
 import 'dart:math';
@@ -19,8 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String generatedOtp = "";
   String errorMessage = "";
   final RegExp numericRegExp = RegExp(r'^[0-9]+$');
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(); // Initialize GoogleSignIn
+
 
   void generateOTP() {
     // Generate a random 4-digit OTP
@@ -78,35 +75,6 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
   }
-
-  Future<void> singInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-      final GoogleSignInAuthentication googleSignInAuthentication =
-          await googleSignInAccount!.authentication;
-      final AuthCredential authCredential = GoogleAuthProvider.credential(
-        idToken: googleSignInAuthentication.idToken,
-        accessToken: googleSignInAuthentication.accessToken,
-      );
-      final UserCredential authResult =
-          await _auth.signInWithCredential(authCredential);
-      final User user = authResult.user!;
-      print('user email = ${user.email}');
-    } catch (e) {
-      print('Google Sign-In Error: $e');
-    }
-  }
-
-  Future<void> signOut() async {
-    try {
-      await _googleSignIn.signOut();
-      print('User Sign Out');
-    } catch (e) {
-      print('Sign Out Error: $e');
-    }
-  }
-
- 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -238,8 +206,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Row(
                             children: [
                               GestureDetector(
-                                onTap: () async {
-                                 await  singInWithGoogle();
+                                onTap: () {
+                                
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(8),
@@ -305,17 +273,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-// Future<void> singInWithGoogle() async{
-//   GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-//   GoogleSignInAuthentication  googleSignInAuthentication = await googleSignInAccount.authentication;
-//   AuthCredential authCredential = GoogleAuthProvider.credential(
-//     idToken: googleSignInAuthentication.idToken,
-//     accessToken: googleSignInAuthentication.accessToken);
-//    AuthResult authResult = await _auth.signInWithCredential(authCredential);
-//    FirebaseUser user = authResult.user;
-//    print( ('user email = ${user.email}'));
-// }
-// Future<void> signOut() async{
-//   await _googleSignIn.signOut();
-//   print('User Sign Out');
-// }
+
