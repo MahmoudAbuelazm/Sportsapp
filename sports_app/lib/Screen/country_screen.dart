@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sports_app/Data/Cubit/Leagues%20Cubit/leagues_cubit.dart';
-import 'package:sports_app/Screen/leagues.dart';
 // import 'package:http/http.dart';
 
 import '../Data/Cubit/cubit/git_country_cubit.dart';
@@ -69,6 +67,28 @@ class _CountryScreenState extends State<CountryScreen> {
                         SizedBox(
                           height: 20,
                         ),
+
+                        Row(
+                          children: [
+                            Container(
+                              height: MediaQuery.of(context).size.height * .07,
+                              width:MediaQuery.of(context).size.width * .8 ,
+               child: Center(child: Text("Current location", style: TextStyle(color:Colors.black),)),
+                              decoration: BoxDecoration( 
+                               borderRadius: BorderRadius.circular(50),
+                               color: Colors.white,
+                              ),
+
+                              
+                            ),
+
+
+                            SizedBox(
+                              width: 15,
+                            ),
+                            Icon(Icons.location_on_outlined, color: Colors.blue,size: 40,),
+                          ],
+                        ),
                         Divider(
                           color: Colors.black,
                           thickness: 1,
@@ -81,15 +101,24 @@ class _CountryScreenState extends State<CountryScreen> {
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 3),
-                                itemBuilder: (context, i) {
+                                itemBuilder: (context, i)
+                                 {
+                                  var countryId = state.response.result[i].countryKey.toString();
+                                  var countryName = state.response.result[i].countryName.toString();
+                                  var countryLogo = state.response.result[i].countryLogo.toString();
+                                  // var countryName = state.response.result[i].countryName.toString();
+
                                   return GestureDetector(
                                     onTap: (){
-                                      Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>LeaguesScreen (response2:context.read<LeaguesCubit>().getAllLeagues("5")),
-                            ),
-                          );
+                                       Navigator.push<void>(
+                                            context,
+                                            MaterialPageRoute<void>(
+                                              builder: (BuildContext context) =>   LeaguesScreen(countryId: countryId , countryName: countryName,countryLogo: countryLogo,),
+                                            ),
+                                          );
+                          final leages = context.read<LeaguesCubit>().getAllLeagues(state.response.result[i].countryKey.toString());
+                          context.read<LeaguesCubit>().getAllLeagues(state.response.result[i].countryKey.toString());
+                          
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(5.0),
