@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sports_app/Data/Cubit/Leagues%20Cubit/leagues_cubit.dart';
 import 'package:sports_app/Data/Cubit/cubit/git_country_cubit.dart';
 import 'package:sports_app/Screen/home_screen.dart';
 import 'package:sports_app/Screen/login_screen.dart';
@@ -23,6 +24,13 @@ class MyApp extends StatelessWidget {
       providers: [
     BlocProvider<GitCountryCubit>(
       create: (BuildContext context) => GitCountryCubit(),
+   
+      
+    ),
+    BlocProvider<LeaguesCubit>(
+      create: (BuildContext context) => LeaguesCubit(),
+   
+      
     ),
     
   ],
