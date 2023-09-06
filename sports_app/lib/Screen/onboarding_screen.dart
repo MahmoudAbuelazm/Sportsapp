@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sports_app/Data/constants/constants.dart';
 import 'package:sports_app/Screen/login_screen.dart';
+import 'package:sports_app/Screen/players.dart';
 import 'package:sports_app/widget/custom_button.dart';
 
 class OnBoardingScreen extends StatefulWidget {
@@ -135,7 +136,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>  LoginScreen()));
+                        builder: (context) =>   Players()));
               })
             ],
           ),

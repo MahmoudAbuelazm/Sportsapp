@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sports_app/Data/Cubit/Leagues%20Cubit/leagues_cubit.dart';
 import 'package:sports_app/Data/Cubit/cubit/git_country_cubit.dart';
+import 'package:sports_app/Data/Cubit/playersCubit/get_players_data_cubit.dart';
 import 'package:sports_app/Screen/home_screen.dart';
 import 'package:sports_app/Screen/login_screen.dart';
 import 'package:sports_app/Screen/onboarding_screen.dart';
+import 'package:sports_app/Screen/splashscreen.dart';
 
 import 'Screen/country_screen.dart';
 
@@ -33,6 +35,11 @@ class MyApp extends StatelessWidget {
       
     ),
     
+
+    BlocProvider<GetPlayersDataCubit>(
+          create: (BuildContext context) => GetPlayersDataCubit(),
+        ),
+        
   ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -42,7 +49,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: LoginScreen(),
+        home: SplashScreen(),
       ),
     );
   }
