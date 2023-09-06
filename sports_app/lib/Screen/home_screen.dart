@@ -8,7 +8,7 @@ import 'package:lottie/lottie.dart';
 import '../Data/Cubit/cubit/git_country_cubit.dart';
 // ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key, required String phoneNumber}) : super(key: key);
 
   List<String> imageList = [
     'Images/photo_2023-09-01_12-30-36.jpg',
