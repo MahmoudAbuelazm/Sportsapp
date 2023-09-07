@@ -3,6 +3,8 @@ import 'package:lottie/lottie.dart';
 import 'package:sports_app/Global/global_data.dart';
 import 'package:sports_app/Screen/home_screen.dart';
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -11,6 +13,9 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
+final FirebaseAuth _auth = FirebaseAuth.instance;
+final GoogleSignIn _googleSignIn = GoogleSignIn();
+
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   String phoneNumber = "";
@@ -18,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
   String generatedOtp = "";
   String errorMessage = "";
   final RegExp numericRegExp = RegExp(r'^[0-9]+$');
-
 
   void generateOTP() {
     // Generate a random 4-digit OTP
@@ -76,14 +80,28 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
   }
+
   @override
+  // void initState() {
+  //   super.initState();
+  //   // Check if the user is already logged in with Google
+  //   if (_auth.currentUser != null) {
+  //     Navigator.of(context).pushReplacement(
+  //       MaterialPageRoute(
+  //         builder: (context) =>
+  //             HomeScreen(phoneNumber: _auth.currentUser!.displayName!),
+  //       ),
+  //     );
+  //   }
+  // }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage("Images/photo_2023-09-02_01-31-07.jpg"),
               fit: BoxFit.fill,
@@ -107,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
@@ -126,8 +144,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 16),
+                              const Padding(
+                                padding: EdgeInsets.only(right: 16),
                                 child: Icon(
                                   Icons.phone,
                                   color: Colors.white,
@@ -143,17 +161,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                     phoneNumber = value;
                                   },
                                   validator: (value) {
-                                        if (!numericRegExp.hasMatch(value!)) {
-                                          return "Phone number should contain only numbers";
-                                          }
-                                    else if (value == null || value.isEmpty) {
+                                    if (!numericRegExp.hasMatch(value!)) {
+                                      return "Phone number should contain only numbers";
+                                    } else if (value == null || value.isEmpty) {
                                       return "Phone number is required";
-                                    }else if (value.length != 11)
+                                    } else if (value.length != 11)
                                       return "Phone number is not valid";
-                                     
+
                                     return null;
                                   },
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     hintText: "Number",
                                     hintStyle: TextStyle(
                                       color: Colors.grey,
@@ -169,8 +186,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 16),
+                              const Padding(
+                                padding: EdgeInsets.only(right: 16),
                                 child: Icon(
                                   Icons.lock,
                                   color: Colors.white,
@@ -184,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onChanged: (value) {
                                     otp = value;
                                   },
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     hintText: "OTP",
                                     hintStyle: TextStyle(
                                       color: Colors.grey,
@@ -208,8 +225,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Row(
                             children: [
                               GestureDetector(
-                                onTap: () {
-                                
+                                onTap: () async {
+                                  await signInWithGoogle();
                                 },
                                 child: Container(
                                   padding: EdgeInsets.all(8),
@@ -237,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: Colors.white.withOpacity(0.5),
                                     ),
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.refresh,
                                     color: Colors.white,
                                   ),
@@ -254,7 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       color: Colors.white.withOpacity(0.5),
                                     ),
                                   ),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.arrow_forward,
                                     color: Colors.white,
                                   ),
@@ -274,5 +291,32 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-}
 
+  Future<void> signInWithGoogle() async {
+    // Trigger the authentication flow
+
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    final UserCredential authResult =
+        await _auth.signInWithCredential(credential);
+    final User? user = authResult.user;
+    //  Once signed in, return the UserCredential
+  await FirebaseAuth.instance.signInWithCredential(credential);
+      Navigator.of(context).pushNamedAndRemoveUntil("HomeScreen", (route) => false);
+     
+    
+  }
+    Future<void> signOut() async {
+    await _googleSignIn.signOut();
+    print('sign out');
+  }
+}

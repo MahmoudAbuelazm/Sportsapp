@@ -60,7 +60,7 @@ class HomeScreen extends StatelessWidget {
       user = phoneNumberController.text;
     }
     return Scaffold(
-      key: _scaffoldKey, // Add this line to assign the key
+      key: _scaffoldKey, 
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: Builder(
@@ -101,9 +101,10 @@ class HomeScreen extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.logout),
                 title: Text("Logout"),
-                onTap: () {
-                  // Handle logout logic here
-                },
+                onTap: ()
+                  {},
+              
+                
               ),
             ],
           ),
