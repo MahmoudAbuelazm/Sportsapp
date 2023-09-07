@@ -8,7 +8,6 @@ import 'package:lottie/lottie.dart';
 
 import '../Data/Cubit/cubit/git_country_cubit.dart';
 
-// ignore: must_be_immutable
 class HomeScreen extends StatelessWidget {
   HomeScreen({Key? key, required String phoneNumber}) : super(key: key);
 
@@ -18,8 +17,7 @@ class HomeScreen extends StatelessWidget {
     'Images/photo_2023-09-02_12-47-30.jpg',
     'Images/photo_2023-09-02_12-47-46.jpg',
   ];
-
-  String User = "";
+  String user = " ";
 
   void _showCustomDialog(
       BuildContext context, String sportName, String getSportName) {
@@ -27,7 +25,8 @@ class HomeScreen extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 25, 24, 26).withOpacity(0.7),
+          backgroundColor:
+              Color.fromARGB(255, 25, 24, 26).withOpacity(0.7),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -53,22 +52,28 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
-    if (phoneNumberController != null) {
-      User = phoneNumberController.text;
+    if (phoneNumberController.text.isNotEmpty) {
+      user = phoneNumberController.text;
     }
     return Scaffold(
+      key: _scaffoldKey, // Add this line to assign the key
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: Builder(
-          builder: (context) {
+          builder: (BuildContext appBarContext) {
             return IconButton(
-              icon: Icon(Icons.menu),
+              icon: const Icon(Icons.menu),
               color: Colors.white,
               iconSize: 30,
+              padding: const EdgeInsets.all(8),
+              alignment: Alignment.center,
+              splashColor: Colors.blueGrey,
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                Scaffold.of(appBarContext).openDrawer();
               },
             );
           },
@@ -77,30 +82,33 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
       ),
       drawer: Drawer(
-          child: Container(
-        color: Colors.white,
-        child: ListView(
-          children: [
-            DrawerHeader(
+        child: Container(
+          color: Colors.white,
+          child: ListView(
+            children: [
+              DrawerHeader(
                 child: Center(
-                    child: Text(
-              "Welcome",
-              style: TextStyle(fontSize: 30, color: Colors.black),
-            ))),
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text(User),
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text("Logout"),
-              onTap: () {
-                // Implement your logout logic here
-              },
-            ),
-          ],
+                  child: Text(
+                    "Welcome",
+                    style: TextStyle(fontSize: 30, color: Colors.black),
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.person),
+                title: Text(user),
+              ),
+              ListTile(
+                leading: Icon(Icons.logout),
+                title: Text("Logout"),
+                onTap: () {
+                  // Handle logout logic here
+                },
+              ),
+            ],
+          ),
         ),
-      )),
+      ),
       body: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
@@ -115,12 +123,14 @@ class HomeScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 65),
-              child: Text("Choose Your fav \n         sport.. ",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontFamily: GoogleFonts.aclonica().fontFamily,
-                    color: Colors.white,
-                  )),
+              child: Text(
+                "Choose Your fav \n         sport.. ",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontFamily: GoogleFonts.aclonica().fontFamily,
+                  color: Colors.white,
+                ),
+              ),
             ),
             Center(
               child: Padding(
@@ -128,7 +138,8 @@ class HomeScreen extends StatelessWidget {
                     top: 43, left: 15, right: 15, bottom: 15),
                 child: GridView.builder(
                   itemCount: imageList.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 17,
                     mainAxisSpacing: 29,
@@ -141,9 +152,8 @@ class HomeScreen extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => CountryScreen(
-                                response: context
-                                    .read<GitCountryCubit>()
-                                    .gitCountry(),
+                                response:
+                                    context.read<GitCountryCubit>().gitCountry(),
                               ),
                             ),
                           );
@@ -154,7 +164,6 @@ class HomeScreen extends StatelessWidget {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          //  border: Border.all(color: Colors.white, width: 0.1),
                           borderRadius: BorderRadius.circular(10),
                           image: DecorationImage(
                             image: AssetImage(imageList[index]),
@@ -168,10 +177,9 @@ class HomeScreen extends StatelessWidget {
                         child: Center(
                           child: Text(
                             _getSportName(index),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 26,
                               color: Colors.white,
-                              // fontFamily: GoogleFonts.aclonica().fontFamily,
                             ),
                           ),
                         ),
@@ -186,3 +194,19 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+
+  String _getSportName(int index) {
+    switch (index) {
+      case 0:
+        return "Football";
+      case 1:
+        return "Volleyball";
+      case 2:
+        return "Basketball";
+      case 3:
+        return "Tennis";
+      default:
+        return "";
+    }
+  }
+}
